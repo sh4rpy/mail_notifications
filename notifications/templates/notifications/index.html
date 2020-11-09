@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} Notifications {% endblock %}
+
+{% block content %}
+<a href="{% url 'new' %}"><button>Create new</button></a>
+  {% for notification in notifications %}
+    <h1>{{ notification.subject }}</h1>
+    <p>{{ notification.message }}</p>
+    <p>Участники: {{ notification.participants.all }}</p>
+    <p>Будет отправлено: {{ notification.send_at }}</p>
+    <a href="{% url 'update' pk=notification.pk %}"><button>Update</button></a>
+    <a href="{% url 'delete' pk=notification.pk %}"><button>Delete</button></a>
+    <hr>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:6.0.9
+    ports:
+      - '6379:6379'
+  web:
+    build: .
+    ports:
+      - '8000:8000'
+    command: bash -c 'python manage.py makemigrations notifications && python manage.py migrate && python manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - .:/code
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+  celery:
+    build: .
+    command: celery -A mail_notifications worker -l info
+    volumes:
+      - .:/code
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
