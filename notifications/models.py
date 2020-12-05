@@ -13,4 +13,4 @@ class Notification(models.Model):
     send_at = models.DateTimeField()
 
     def __str__(self):
-        return self.title
+        return self.subject
